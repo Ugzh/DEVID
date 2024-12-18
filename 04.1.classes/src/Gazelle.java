@@ -7,20 +7,14 @@ public class Gazelle {
         this.name = name;
     }
 
-    void whichSentence(String sentence){
-        System.out.println(name + " a prononcé la phrase : " + sentence);
-        if(sentence.equalsIgnoreCase("Je t'ai bien eu !"))
-            System.out.println(name + " a 50% de chance de s'échapper");
-        else
-            System.out.println(name + " a aucune chance de s'échapper");
-    }
+
 
     void tryToEscape(String sentence, Lion lion){
-        Random r;
+        Random random;
         int chanceToEscape;
 
-        r = new Random();
-        chanceToEscape = r.nextInt(100);
+        random = new Random();
+        chanceToEscape = random.nextInt(100);
 
         if(sentence.equalsIgnoreCase("Je t'ai bien eu !")){
             if(chanceToEscape >= 50 )
@@ -45,3 +39,4 @@ public class Gazelle {
         return name;
     }
 }
+

@@ -5,6 +5,9 @@ public class Lion {
         this.name = name;
     }
 
+    public void attack(Gazelle gazelle, double percentageOfSurvival){
+        gazelle.dieOrEscape(percentageOfSurvival);
+    }
     public String getName() {
         return name;
     }
