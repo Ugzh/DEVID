@@ -23,30 +23,6 @@ public class Main {
         //Exo 5
         //System.out.println(maxtab(new int[]{}));
 
-        //Ne marche pas à vérifier
-        Scanner scanner = new Scanner(System.in);
-        int age;
-        age = Integer.MIN_VALUE;
-
-        do {
-            try{
-                System.out.println("valeur age");
-                age = scanner.nextInt();
-                isMaj(age);
-            }catch (MyException me){
-                System.out.println(me.getMessage());
-            }catch (InputMismatchException ime){
-                System.out.println("Entrer un nombre");
-                scanner.nextLine();
-            }
-        } while(age < 0 || age > 130);
-    }
-
-
-    static boolean isMaj(int age) throws MyException{
-        if(age < 0 || age > 130)
-            throw new MyException("L'age doit être supérieur à 0");
-        return age < 17;
     }
 
     public static int max(int int1, int int2, int int3){
