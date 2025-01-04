@@ -41,6 +41,11 @@ public class Countries {
             }
             showAllCountries += countries.get(i) + ',';
         }
+
+        // Méthode corrigée, Mais pas possible car ma boucle incrémente la phrase
+        //countries.add(countries.indexOf("Russie"), "Ukraine");
+
+
         System.out.println(showAllCountries+showSize+countries.size()+"\n");
         showAllCountries ="";
 
@@ -50,6 +55,10 @@ public class Countries {
             }
             showAllCountries += countries.get(i) + ',';
         }
+
+        // Méthode corrigée,Méthode à priviligier, Mais pas possible car ma boucle incrémente la phrase
+        //countries.add(countries.indexOf("Espagne")+ 1, "Mali");
+
         System.out.println(showAllCountries+showSize+countries.size()+"\n");
         showAllCountries ="";
 
