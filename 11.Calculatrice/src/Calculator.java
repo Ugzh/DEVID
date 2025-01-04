@@ -4,9 +4,10 @@ import java.awt.*;
 public class Calculator extends JFrame {
     JLabel resultLabel;
     String printResultForUser;
-    Integer x;
+    Float x;
     Integer y;
     String op;
+
 
     public Calculator(){
         super("Calculatrice");
@@ -56,62 +57,69 @@ public class Calculator extends JFrame {
         mainPanel.add(gridPanel, BorderLayout.CENTER);
 
         btnClear.addActionListener(e -> {
-            x = 0;
-            y = 0;
+            x = null;
+            y = null;
             printResultForUser = (""); // Permet de remettre la phrase vide
             resultLabel.setText(" "); // Permet de laisser l'affichage à l'utilisateur
             op = null;
         });
 
         btnEqual.addActionListener(e -> {
-            y = Integer.parseInt(printResultForUser.substring((String.valueOf(x).length()+1)));
+            System.out.println(x + " x");
+            System.out.println(String.valueOf(x) + " value x");
+            System.out.println(String.valueOf(x).length() + " length");
+            System.out.println(printResultForUser + " result");
+            //Pas bon du tout si je mets 2 chiffres la length change pour les nombres
+            y = Integer.parseInt(printResultForUser.substring(String.valueOf(x).length()-1));
+
+
+            System.out.println(y + "\n");
             switch (op){
                 case "+":
                     add(x,y);
-                    printResultForUser = Integer.toString(this.x);
-                    resultLabel.setText(printResultForUser);
+                    printIntOrFloat(x);
                     break;
                 case "-":
                     substract(x,y);
-                    printResultForUser = Integer.toString(this.x);
-                    resultLabel.setText(printResultForUser);
+                    printIntOrFloat(this.x);
                     break;
                 case "*":
                     multiply(x,y);
-                    printResultForUser = Integer.toString(this.x);
-                    resultLabel.setText(printResultForUser);
+                    printIntOrFloat(this.x);
                     break;
                 case "/":
-                    try {
+                    try{
                         divide(x,y);
-                    } catch (ArithmeticException ae){
+                        printIntOrFloat(this.x);
+                    } catch (NumberFormatException nfe){
                         resultLabel.setText("∞");
-                        x = null;
-                        y = null;
                     }
+                    x = null;
+                    y = null;
                 default:
             }
             op = null;
+
         });
 
         btnPlus.addActionListener(e -> {
             op = btnPlus.getText();
-            x = Integer.parseInt(printResultForUser);
+            x = Float.parseFloat(resultLabel.getText());
             showValueOfButton(btnPlus);
         });
         btnMinus.addActionListener(e -> {
             op = btnMinus.getText();
-            x = Integer.parseInt(printResultForUser);
+            x = Float.parseFloat(printResultForUser);
             showValueOfButton(btnMinus);
         });
         btnDivide.addActionListener(e -> {
             op = btnDivide.getText();
-            x = Integer.parseInt(printResultForUser);
+            x = Float.parseFloat(printResultForUser);
             showValueOfButton(btnDivide);
         });
         btnMultiply.addActionListener(e -> {
             op = btnMultiply.getText();
-            x = Integer.parseInt(printResultForUser);
+            x = Float.parseFloat(printResultForUser);
             showValueOfButton(btnMultiply);
         });
 
@@ -132,24 +140,32 @@ public class Calculator extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
+
     }
 
-    private void add(int x,int y){
+    private void add(float x,int y){
         this.x = x + y;
-        resultLabel.setText(Integer.toString(this.x));
     }
-    private void substract(int x,int y){
+    private void substract(float x,int y){
         this.x = x - y;
-        resultLabel.setText(Integer.toString(this.x));
     }
-    private void multiply(int x,int y){
-        this.x = x * y;
-        resultLabel.setText(Integer.toString(this.x));
+    private void multiply(float x,int y){
+        this.x = x * y;}
+    private void divide(float x, int y){
+        this.x = x / y;
     }
-    private void divide(int x, int y){
-        if(x/y == (int) x/y)
-            this.x = x / y;
-        resultLabel.setText(Integer.toString(this.x));
+
+    private void printIntOrFloat(float x){
+        if(x == (int) x){
+            printResultForUser = Integer.toString((int)x);
+            resultLabel.setText(printResultForUser);
+        } else if (Float.isInfinite(x))
+            resultLabel.setText("∞");
+        else{
+            printResultForUser = String.format("%.2f", this.x);
+            System.out.println("oui");
+            resultLabel.setText(printResultForUser);
+        }
     }
 
     private void showValueOfButton(JButton button){
