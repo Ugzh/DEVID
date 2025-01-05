@@ -1,9 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 public class Calculator extends JFrame {
     JLabel resultLabel;
-    String printResultForUser;
+    String strToOperate;
     Float x;
     Integer y;
     String op;
@@ -29,26 +30,97 @@ public class Calculator extends JFrame {
         JButton btnMultiply = new JButton("*");
         JButton btnEqual = new JButton("=");
         JButton btnClear = new JButton("c");
-        JButton[] allBtnArray = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus ,btnSeven, btnEight, btnNine,  btnMultiply, btnClear, btnZero, btnEqual,btnDivide};
-        JButton[] btnArrayWithoutClear = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus ,
-                btnSeven,
-                btnEight, btnNine,  btnMultiply, btnZero, btnEqual,btnDivide};
-        JButton[] btnArrayWithoutEqualAndClear = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnDivide, btnPlus, btnMinus, btnMultiply};
-        JButton[] btnActionArrayWithoutEqualAndClear = {btnPlus, btnMinus, btnDivide, btnMultiply};
 
-        printResultForUser = "";
+        JButton[] allBtnArray = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus ,btnSeven, btnEight, btnNine,  btnMultiply, btnClear, btnZero, btnEqual,btnDivide};
+        JButton[] btnArrayWithoutClear = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus , btnSeven, btnEight, btnNine,  btnMultiply, btnZero, btnEqual,btnDivide};
+        JButton[] btnArrayWithoutEqualAndClear = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnDivide, btnPlus, btnMinus, btnMultiply};
+        JButton[] btnOperatorWithoutEqual = {btnPlus, btnMinus, btnDivide, btnMultiply};
+        JButton[] btnArrayAllDigits = {btnOne, btnTwo, btnThree,btnFour, btnFive, btnSix , btnSeven, btnEight, btnNine};
+
+        strToOperate = "";
         op = "";
         resultLabel = new JLabel(" ");
-
         resultLabel.setFont(new Font(resultLabel.getFont().getFontName(), Font.PLAIN,30));
 
         for(JButton btn : btnArrayWithoutEqualAndClear){
-            btn.addActionListener(e-> showValueOfButton(btn));
+            btn.addActionListener(e-> {
+                showValueOfButton(btn);
+            });
         }
 
-        for(JButton btn : btnActionArrayWithoutEqualAndClear){
-           btn.addActionListener(e -> op += btn.getText());
+        for (JButton btn : btnArrayAllDigits){
+            btn.addActionListener(e -> {
+                if(op.isEmpty())
+                    toggleBtn(btnOperatorWithoutEqual, true);
+                if(!op.isEmpty())
+                    btnEqual.setEnabled(true);
+            });
+
         }
+
+        for(JButton btn : btnOperatorWithoutEqual){
+           btn.addActionListener(e -> {
+               op += btn.getText();
+               toggleBtn(btnOperatorWithoutEqual, false);
+           });
+        }
+
+        btnClear.addActionListener(e -> {
+            x = null;
+            y = null;
+            op = "";
+            strToOperate = "";
+            resultLabel.setText(" ");
+            toggleBtn(btnArrayAllDigits, true);
+            btnMinus.setEnabled(false);
+            btnEqual.setEnabled(false);
+        });
+
+        btnEqual.addActionListener(e -> {
+            String regex = "[*/+-]";
+            String[] strXAndY = strToOperate.replaceAll(regex, ":").split(":");
+            boolean isNegative = Objects.equals(strXAndY[0], "");
+
+            if(strXAndY.length <= 2 ||(isNegative && strXAndY.length == 3) ) {
+                x = isNegative ? Float.parseFloat(strXAndY[1]) * -1 : Float.parseFloat(strXAndY[0]);
+                y = isNegative ? Integer.parseInt(strXAndY[2]) : Integer.parseInt(strXAndY[1]);
+
+                switch (op) {
+                    case "+":
+                        add(x, y);
+//                        printIntOrFloat(x);
+                        break;
+                    case "-":
+                        substract(x, y);
+//                        printIntOrFloat(x);
+                        break;
+                    case "*":
+                        multiply(x, y);
+//                        printIntOrFloat(x);
+                        break;
+                    case "/":
+                        divide(x, y);
+                    default:
+                }
+
+                printIntOrFloat(x);
+                op = "";
+                toggleBtn(btnOperatorWithoutEqual, true);
+                if(x.isInfinite()){
+                    resultLabel.setText("∞");
+                    toggleBtn(btnArrayWithoutClear, false);
+                }
+
+            } else {
+                strToOperate = "";
+                resultLabel.setText("Error");
+                toggleBtn(btnArrayWithoutClear,false);
+            }
+
+        });
+
+        btnMinus.setEnabled(false);
+        btnEqual.setEnabled(false);
 
         for(JButton btn : allBtnArray){
             gridPanel.add(btn);
@@ -56,61 +128,6 @@ public class Calculator extends JFrame {
 
         mainPanel.add(resultLabel, BorderLayout.NORTH);
         mainPanel.add(gridPanel, BorderLayout.CENTER);
-
-        btnClear.addActionListener(e -> {
-            x = null;
-            y = null;
-            op = "";
-            printResultForUser = (""); // Permet de remettre la phrase vide
-            resultLabel.setText(" "); // Permet de laisser l'affichage à l'utilisateur
-           toggleDisableBtn(btnArrayWithoutClear, true);
-        });
-
-        btnEqual.addActionListener(e -> {
-            String regex = "[*/+-]";
-            String[] strXAndY = printResultForUser.replaceAll(regex, ":").split(":");
-            if(strXAndY.length <= 2) {
-                x = Float.parseFloat(strXAndY[0]);
-                y = Integer.parseInt(strXAndY[1]);
-
-                switch (op) {
-                    case "+":
-                        add(x, y);
-                        printIntOrFloat(x);
-                        break;
-                    case "-":
-                        substract(x, y);
-                        printIntOrFloat(x);
-                        break;
-                    case "*":
-                        multiply(x, y);
-                        printIntOrFloat(x);
-                        break;
-                    case "/":
-                        /*try {
-                            divide(x, y);
-                            printIntOrFloat(this.x);
-                        } catch (NumberFormatException nfe) {
-                            resultLabel.setText("∞");
-                        }*/
-                        divide(x, y);
-                        printIntOrFloat(x);
-                        if(x.isInfinite()){
-                            resultLabel.setText("∞");
-                            toggleDisableBtn(btnArrayWithoutClear, false);
-                        }
-                        x = null;
-                        y = null;
-                    default:
-                }
-                op = "";
-            } else {
-                printResultForUser= "";
-                resultLabel.setText("Error");
-                toggleDisableBtn(btnArrayWithoutClear,false);
-            }
-
-        });
 
         setContentPane(mainPanel);
         setSize(300,300);
@@ -134,20 +151,20 @@ public class Calculator extends JFrame {
 
     private void printIntOrFloat(float x){
         if(x == (int) x){
-            printResultForUser = Integer.toString((int)x);
-            resultLabel.setText(printResultForUser);
+            strToOperate = Integer.toString((int)x);
+            resultLabel.setText(strToOperate);
         } else{
-            printResultForUser = String.format("%.2f", this.x);
-            resultLabel.setText(printResultForUser);
+            strToOperate = String.format("%.2f", this.x);
+            resultLabel.setText(strToOperate);
         }
     }
 
     private void showValueOfButton(JButton button){
-        printResultForUser += button.getText();
-        resultLabel.setText(printResultForUser);
+        strToOperate += button.getText();
+        resultLabel.setText(strToOperate);
     }
 
-    private void toggleDisableBtn(JButton[] button, boolean isEnable){
+    private void toggleBtn(JButton[] button, boolean isEnable){
         for (JButton btn : button){
             btn.setEnabled(isEnable);
         }
