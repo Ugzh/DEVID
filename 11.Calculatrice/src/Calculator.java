@@ -30,10 +30,14 @@ public class Calculator extends JFrame {
         JButton btnEqual = new JButton("=");
         JButton btnClear = new JButton("c");
         JButton[] allBtnArray = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus ,btnSeven, btnEight, btnNine,  btnMultiply, btnClear, btnZero, btnEqual,btnDivide};
+        JButton[] btnArrayWithoutClear = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus ,
+                btnSeven,
+                btnEight, btnNine,  btnMultiply, btnZero, btnEqual,btnDivide};
         JButton[] btnArrayWithoutEqualAndClear = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnDivide, btnPlus, btnMinus, btnMultiply};
-        JButton[] btnActionArrayWithoutEqualAndClear = {btnPlus, btnMinus, btnDivide, btnMinus};
+        JButton[] btnActionArrayWithoutEqualAndClear = {btnPlus, btnMinus, btnDivide, btnMultiply};
 
         printResultForUser = "";
+        op = "";
         resultLabel = new JLabel(" ");
 
         resultLabel.setFont(new Font(resultLabel.getFont().getFontName(), Font.PLAIN,30));
@@ -43,7 +47,7 @@ public class Calculator extends JFrame {
         }
 
         for(JButton btn : btnActionArrayWithoutEqualAndClear){
-           btn.addActionListener(e -> op = btn.getText());
+           btn.addActionListener(e -> op += btn.getText());
         }
 
         for(JButton btn : allBtnArray){
@@ -56,15 +60,16 @@ public class Calculator extends JFrame {
         btnClear.addActionListener(e -> {
             x = null;
             y = null;
-            op = null;
+            op = "";
             printResultForUser = (""); // Permet de remettre la phrase vide
             resultLabel.setText(" "); // Permet de laisser l'affichage à l'utilisateur
+           toggleDisableBtn(btnArrayWithoutClear, true);
         });
 
         btnEqual.addActionListener(e -> {
-            String[] strXAndY = printResultForUser.replace(op, ":").split(":");
+            String regex = "[*/+-]";
+            String[] strXAndY = printResultForUser.replaceAll(regex, ":").split(":");
             if(strXAndY.length <= 2) {
-
                 x = Float.parseFloat(strXAndY[0]);
                 y = Integer.parseInt(strXAndY[1]);
 
@@ -90,13 +95,19 @@ public class Calculator extends JFrame {
                         }*/
                         divide(x, y);
                         printIntOrFloat(x);
+                        if(x.isInfinite()){
+                            resultLabel.setText("∞");
+                            toggleDisableBtn(btnArrayWithoutClear, false);
+                        }
                         x = null;
                         y = null;
                     default:
                 }
-                op = null;
+                op = "";
             } else {
+                printResultForUser= "";
                 resultLabel.setText("Error");
+                toggleDisableBtn(btnArrayWithoutClear,false);
             }
 
         });
@@ -125,9 +136,7 @@ public class Calculator extends JFrame {
         if(x == (int) x){
             printResultForUser = Integer.toString((int)x);
             resultLabel.setText(printResultForUser);
-        } else if (Float.isInfinite(x))
-            resultLabel.setText("∞");
-        else{
+        } else{
             printResultForUser = String.format("%.2f", this.x);
             resultLabel.setText(printResultForUser);
         }
@@ -136,5 +145,11 @@ public class Calculator extends JFrame {
     private void showValueOfButton(JButton button){
         printResultForUser += button.getText();
         resultLabel.setText(printResultForUser);
+    }
+
+    private void toggleDisableBtn(JButton[] button, boolean isEnable){
+        for (JButton btn : button){
+            btn.setEnabled(isEnable);
+        }
     }
 }
