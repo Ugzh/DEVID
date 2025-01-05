@@ -32,10 +32,9 @@ public class Calculator extends JFrame {
         JButton btnClear = new JButton("c");
 
         JButton[] allBtnArray = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus ,btnSeven, btnEight, btnNine,  btnMultiply, btnClear, btnZero, btnEqual,btnDivide};
-        JButton[] btnArrayWithoutClear = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus , btnSeven, btnEight, btnNine,  btnMultiply, btnZero, btnEqual,btnDivide};
         JButton[] btnArrayWithoutEqualAndClear = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnDivide, btnPlus, btnMinus, btnMultiply};
+        JButton[] btnArrayWithoutClear = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnDivide, btnPlus, btnMinus, btnMultiply, btnEqual};
         JButton[] btnOperatorWithoutEqual = {btnPlus, btnMinus, btnDivide, btnMultiply};
-        JButton[] btnArrayAllDigits = {btnOne, btnTwo, btnThree,btnFour, btnFive, btnSix , btnSeven, btnEight, btnNine};
 
         strToOperate = "";
         op = "";
@@ -48,20 +47,9 @@ public class Calculator extends JFrame {
             });
         }
 
-        for (JButton btn : btnArrayAllDigits){
-            btn.addActionListener(e -> {
-                if(op.isEmpty())
-                    toggleBtn(btnOperatorWithoutEqual, true);
-                if(!op.isEmpty())
-                    btnEqual.setEnabled(true);
-            });
-
-        }
-
         for(JButton btn : btnOperatorWithoutEqual){
            btn.addActionListener(e -> {
                op += btn.getText();
-               toggleBtn(btnOperatorWithoutEqual, false);
            });
         }
 
@@ -71,9 +59,7 @@ public class Calculator extends JFrame {
             op = "";
             strToOperate = "";
             resultLabel.setText(" ");
-            toggleBtn(btnArrayAllDigits, true);
-            btnMinus.setEnabled(false);
-            btnEqual.setEnabled(false);
+            toggleBtn(btnArrayWithoutClear, true);
         });
 
         btnEqual.addActionListener(e -> {
@@ -81,46 +67,41 @@ public class Calculator extends JFrame {
             String[] strXAndY = strToOperate.replaceAll(regex, ":").split(":");
             boolean isNegative = Objects.equals(strXAndY[0], "");
 
-            if(strXAndY.length <= 2 ||(isNegative && strXAndY.length == 3) ) {
+            if (strXAndY.length <= 2 || (isNegative && strXAndY.length == 3)) {
                 x = isNegative ? Float.parseFloat(strXAndY[1]) * -1 : Float.parseFloat(strXAndY[0]);
-                y = isNegative ? Integer.parseInt(strXAndY[2]) : Integer.parseInt(strXAndY[1]);
+                try {
+                    y = isNegative ? Integer.parseInt(strXAndY[2]) : Integer.parseInt(strXAndY[1]);
+                    switch (op) {
+                        case "+":
+                            add(x, y);
+                            break;
+                        case "-":
+                            substract(x, y);
+                            break;
+                        case "*":
+                            multiply(x, y);
+                            break;
+                        case "/":
+                            divide(x, y);
+                        default:
+                    }
+                    printIntOrFloat(x);
+                    op = "";
+                    if (x.isInfinite()) {
+                        resultLabel.setText("∞");
+                        toggleBtn(btnArrayWithoutClear, false);
+                    }
 
-                switch (op) {
-                    case "+":
-                        add(x, y);
-//                        printIntOrFloat(x);
-                        break;
-                    case "-":
-                        substract(x, y);
-//                        printIntOrFloat(x);
-                        break;
-                    case "*":
-                        multiply(x, y);
-//                        printIntOrFloat(x);
-                        break;
-                    case "/":
-                        divide(x, y);
-                    default:
-                }
-
-                printIntOrFloat(x);
-                op = "";
-                toggleBtn(btnOperatorWithoutEqual, true);
-                if(x.isInfinite()){
-                    resultLabel.setText("∞");
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
+                    resultLabel.setText("Error");
                     toggleBtn(btnArrayWithoutClear, false);
                 }
-
             } else {
                 strToOperate = "";
                 resultLabel.setText("Error");
-                toggleBtn(btnArrayWithoutClear,false);
             }
-
         });
 
-        btnMinus.setEnabled(false);
-        btnEqual.setEnabled(false);
 
         for(JButton btn : allBtnArray){
             gridPanel.add(btn);
