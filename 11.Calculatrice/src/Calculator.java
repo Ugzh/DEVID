@@ -8,7 +8,6 @@ public class Calculator extends JFrame {
     Integer y;
     String op;
 
-
     public Calculator(){
         super("Calculatrice");
 
@@ -30,28 +29,26 @@ public class Calculator extends JFrame {
         JButton btnMultiply = new JButton("*");
         JButton btnEqual = new JButton("=");
         JButton btnClear = new JButton("c");
+        JButton[] allBtnArray = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus ,btnSeven, btnEight, btnNine,  btnMultiply, btnClear, btnZero, btnEqual,btnDivide};
+        JButton[] btnArrayWithoutEqualAndClear = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnDivide, btnPlus, btnMinus, btnMultiply};
+        JButton[] btnActionArrayWithoutEqualAndClear = {btnPlus, btnMinus, btnDivide, btnMinus};
 
         printResultForUser = "";
         resultLabel = new JLabel(" ");
 
         resultLabel.setFont(new Font(resultLabel.getFont().getFontName(), Font.PLAIN,30));
 
-        gridPanel.add(btnOne);
-        gridPanel.add(btnTwo);
-        gridPanel.add(btnThree);
-        gridPanel.add(btnPlus);
-        gridPanel.add(btnFour);
-        gridPanel.add(btnFive);
-        gridPanel.add(btnSix);
-        gridPanel.add(btnMinus);
-        gridPanel.add(btnSeven);
-        gridPanel.add(btnEight);
-        gridPanel.add(btnNine);
-        gridPanel.add(btnMultiply);
-        gridPanel.add(btnClear);
-        gridPanel.add(btnZero);
-        gridPanel.add(btnEqual);
-        gridPanel.add(btnDivide);
+        for(JButton btn : btnArrayWithoutEqualAndClear){
+            btn.addActionListener(e-> showValueOfButton(btn));
+        }
+
+        for(JButton btn : btnActionArrayWithoutEqualAndClear){
+           btn.addActionListener(e -> op = btn.getText());
+        }
+
+        for(JButton btn : allBtnArray){
+            gridPanel.add(btn);
+        }
 
         mainPanel.add(resultLabel, BorderLayout.NORTH);
         mainPanel.add(gridPanel, BorderLayout.CENTER);
@@ -59,81 +56,50 @@ public class Calculator extends JFrame {
         btnClear.addActionListener(e -> {
             x = null;
             y = null;
+            op = null;
             printResultForUser = (""); // Permet de remettre la phrase vide
             resultLabel.setText(" "); // Permet de laisser l'affichage à l'utilisateur
-            op = null;
         });
 
         btnEqual.addActionListener(e -> {
-            System.out.println(x + " x");
-            System.out.println(String.valueOf(x) + " value x");
-            System.out.println(String.valueOf(x).length() + " length");
-            System.out.println(printResultForUser + " result");
-            //Pas bon du tout si je mets 2 chiffres la length change pour les nombres
-            y = Integer.parseInt(printResultForUser.substring(String.valueOf(x).length()-1));
+            String[] strXAndY = printResultForUser.replace(op, ":").split(":");
+            if(strXAndY.length <= 2) {
 
+                x = Float.parseFloat(strXAndY[0]);
+                y = Integer.parseInt(strXAndY[1]);
 
-            System.out.println(y + "\n");
-            switch (op){
-                case "+":
-                    add(x,y);
-                    printIntOrFloat(x);
-                    break;
-                case "-":
-                    substract(x,y);
-                    printIntOrFloat(this.x);
-                    break;
-                case "*":
-                    multiply(x,y);
-                    printIntOrFloat(this.x);
-                    break;
-                case "/":
-                    try{
-                        divide(x,y);
-                        printIntOrFloat(this.x);
-                    } catch (NumberFormatException nfe){
-                        resultLabel.setText("∞");
-                    }
-                    x = null;
-                    y = null;
-                default:
+                switch (op) {
+                    case "+":
+                        add(x, y);
+                        printIntOrFloat(x);
+                        break;
+                    case "-":
+                        substract(x, y);
+                        printIntOrFloat(x);
+                        break;
+                    case "*":
+                        multiply(x, y);
+                        printIntOrFloat(x);
+                        break;
+                    case "/":
+                        /*try {
+                            divide(x, y);
+                            printIntOrFloat(this.x);
+                        } catch (NumberFormatException nfe) {
+                            resultLabel.setText("∞");
+                        }*/
+                        divide(x, y);
+                        printIntOrFloat(x);
+                        x = null;
+                        y = null;
+                    default:
+                }
+                op = null;
+            } else {
+                resultLabel.setText("Error");
             }
-            op = null;
 
         });
-
-        btnPlus.addActionListener(e -> {
-            op = btnPlus.getText();
-            x = Float.parseFloat(resultLabel.getText());
-            showValueOfButton(btnPlus);
-        });
-        btnMinus.addActionListener(e -> {
-            op = btnMinus.getText();
-            x = Float.parseFloat(printResultForUser);
-            showValueOfButton(btnMinus);
-        });
-        btnDivide.addActionListener(e -> {
-            op = btnDivide.getText();
-            x = Float.parseFloat(printResultForUser);
-            showValueOfButton(btnDivide);
-        });
-        btnMultiply.addActionListener(e -> {
-            op = btnMultiply.getText();
-            x = Float.parseFloat(printResultForUser);
-            showValueOfButton(btnMultiply);
-        });
-
-
-        btnZero.addActionListener(e -> showValueOfButton(btnZero));
-        btnOne.addActionListener(e -> showValueOfButton(btnOne));
-        btnTwo.addActionListener(e -> showValueOfButton(btnTwo));
-        btnThree.addActionListener(e -> showValueOfButton(btnThree));
-        btnFour.addActionListener(e -> showValueOfButton(btnFour));
-        btnFive.addActionListener(e -> showValueOfButton(btnFive));
-        btnSix.addActionListener(e -> showValueOfButton(btnSix));
-        btnSeven.addActionListener(e -> showValueOfButton(btnSeven));
-        btnEight.addActionListener(e -> showValueOfButton(btnEight));
-        btnNine.addActionListener(e -> showValueOfButton(btnNine));
 
         setContentPane(mainPanel);
         setSize(300,300);
@@ -163,7 +129,6 @@ public class Calculator extends JFrame {
             resultLabel.setText("∞");
         else{
             printResultForUser = String.format("%.2f", this.x);
-            System.out.println("oui");
             resultLabel.setText(printResultForUser);
         }
     }
