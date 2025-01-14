@@ -1,13 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.Objects;
+import java.util.Locale;
 
 public class Calculator extends JFrame {
     JLabel resultLabel;
-    String strToOperate;
+    String strToOperate, op;
     Float x;
     Integer y;
-    String op;
 
     public Calculator(){
         super("Calculatrice");
@@ -33,13 +34,16 @@ public class Calculator extends JFrame {
 
         JButton[] allBtnArray = {btnOne, btnTwo, btnThree, btnPlus,btnFour, btnFive, btnSix, btnMinus ,btnSeven, btnEight, btnNine,  btnMultiply, btnClear, btnZero, btnEqual,btnDivide};
         JButton[] btnArrayWithoutEqualAndClear = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnDivide, btnPlus, btnMinus, btnMultiply};
-        JButton[] btnArrayWithoutClear = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven, btnEight, btnNine, btnDivide, btnPlus, btnMinus, btnMultiply, btnEqual};
+        JButton[] btnArrayWithoutClear = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven,
+                btnEight, btnNine, btnDivide, btnPlus, btnMinus, btnMultiply, btnEqual};
+        JButton[] btnArrayAllDigitsAndEqual = {btnZero, btnOne, btnTwo, btnThree, btnFour, btnFive, btnSix, btnSeven,
+                btnEight, btnNine, btnEqual};
         JButton[] btnOperatorWithoutEqual = {btnPlus, btnMinus, btnDivide, btnMultiply};
 
         strToOperate = "";
         op = "";
         resultLabel = new JLabel(" ");
-        resultLabel.setFont(new Font(resultLabel.getFont().getFontName(), Font.PLAIN,30));
+        resultLabel.setFont(new Font(resultLabel.getFont().getFontName(), Font.PLAIN,40));
 
         for(JButton btn : btnArrayWithoutEqualAndClear){
             btn.addActionListener(e-> {
@@ -50,6 +54,7 @@ public class Calculator extends JFrame {
         for(JButton btn : btnOperatorWithoutEqual){
            btn.addActionListener(e -> {
                op += btn.getText();
+               toggleBtn(btnArrayAllDigitsAndEqual, true);
            });
         }
 
@@ -63,14 +68,14 @@ public class Calculator extends JFrame {
         });
 
         btnEqual.addActionListener(e -> {
-            String regex = "[*/+-]";
-            String[] strXAndY = strToOperate.replaceAll(regex, ":").split(":");
-            boolean isNegative = Objects.equals(strXAndY[0], "");
+            String regex = "[*/\\-+]";
+            String[] strArrayXAndY = strToOperate.replaceAll(regex, ":").split(":");
 
-            if (strXAndY.length <= 2 || (isNegative && strXAndY.length == 3)) {
-                x = isNegative ? Float.parseFloat(strXAndY[1]) * -1 : Float.parseFloat(strXAndY[0]);
+            boolean isNegative = Objects.equals(strArrayXAndY[0], "");
+            if (strArrayXAndY.length <= 2 || (isNegative && strArrayXAndY.length == 3)) {
                 try {
-                    y = isNegative ? Integer.parseInt(strXAndY[2]) : Integer.parseInt(strXAndY[1]);
+                    x = isNegative ? Float.parseFloat(strArrayXAndY[1]) * -1 : Float.parseFloat(strArrayXAndY[0]);
+                    y = isNegative ? Integer.parseInt(strArrayXAndY[2]) : Integer.parseInt(strArrayXAndY[1]);
                     switch (op) {
                         case "+":
                             add(x, y);
@@ -87,11 +92,11 @@ public class Calculator extends JFrame {
                     }
                     printIntOrFloat(x);
                     op = "";
+                    toggleBtn(btnArrayAllDigitsAndEqual, false);
                     if (x.isInfinite()) {
-                        resultLabel.setText("∞");
+                        resultLabel.setText(String.valueOf(x));
                         toggleBtn(btnArrayWithoutClear, false);
                     }
-
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     resultLabel.setText("Error");
                     toggleBtn(btnArrayWithoutClear, false);
@@ -99,6 +104,7 @@ public class Calculator extends JFrame {
             } else {
                 strToOperate = "";
                 resultLabel.setText("Error");
+                toggleBtn(btnArrayWithoutClear, false);
             }
         });
 
@@ -109,35 +115,34 @@ public class Calculator extends JFrame {
 
         mainPanel.add(resultLabel, BorderLayout.NORTH);
         mainPanel.add(gridPanel, BorderLayout.CENTER);
-
         setContentPane(mainPanel);
-        setSize(300,300);
+
+        setSize(500,500);
         setResizable(false);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
         setVisible(true);
-
     }
 
     private void add(float x,int y){
         this.x = x + y;
     }
+
     private void substract(float x,int y){
         this.x = x - y;
     }
+
     private void multiply(float x,int y){
-        this.x = x * y;}
+        this.x = x * y;
+    }
+
     private void divide(float x, int y){
         this.x = x / y;
     }
 
     private void printIntOrFloat(float x){
-        if(x == (int) x){
-            strToOperate = Integer.toString((int)x);
-            resultLabel.setText(strToOperate);
-        } else{
-            strToOperate = String.format("%.2f", this.x);
-            resultLabel.setText(strToOperate);
-        }
+        strToOperate = x == (int) x ? Integer.toString((int)x) : String.format(Locale.ROOT,"%.2f", x) ;
+        resultLabel.setText(strToOperate);
     }
 
     private void showValueOfButton(JButton button){

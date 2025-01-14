@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">Tuto android</string>
+    <string name="btn_connect">Validate</string>
+    <string name="bear">A beautiful bear</string>
+    <string name="change_name">Are you sure?</string>
+
+    <string name="label_lastname">Lastname :</string>
+    <string name="label_firstname">Firstname :</string>
+    <string name="label_age">Age :</string>
+    <string name="input_lastname">Enter your lastname</string>
+    <string name="input_firstname">Enter your firstname</string>
+    <string name="input_age">Enter your age</string>
+
+    <string name="btn_return">Back</string>
+    <string name="second_main_title">2e activity</string>
+    <string name="italian_label">Italy</string>
+
+</resources>

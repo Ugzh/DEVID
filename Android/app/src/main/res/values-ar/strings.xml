@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">توتو أندرويد</string>
+    <string name="btn_connect">التحقق من صحة</string>
+    <string name="bear">صورة دب جميل</string>
+    <string name="change_name">هل أنت متأكد؟</string>
+
+    <string name="label_lastname">اسم :</string>
+    <string name="label_firstname">الاسم الأول :</string>
+    <string name="label_age">العمر :</string>
+    <string name="input_lastname">أدخل اسمك</string>
+    <string name="input_firstname">أدخل اسمك الأول</string>
+    <string name="input_age">أدخل عمرك</string>
+
+    <string name="btn_return">العودة إلى</string>
+    <string name="second_main_title">نشاط 2هـ 2 هـ</string>
+    <string name="italian_label">Italy</string>
+
+
+</resources>
