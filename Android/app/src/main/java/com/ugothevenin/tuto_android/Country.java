@@ -1,6 +1,6 @@
 package com.ugothevenin.tuto_android;
 
-public class Country {
+public class Country implements Comparable<Country>{
     private String countryName;
     private int resId;
 
@@ -13,5 +13,11 @@ public class Country {
     }
     public int getResId() {
         return resId;
+    }
+
+    @Override
+    public int compareTo(Country country) {
+        String compareCountryName = country.getCountryName();
+        return this.getCountryName().compareTo(compareCountryName) ;
     }
 }

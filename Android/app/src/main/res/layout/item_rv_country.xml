@@ -4,25 +4,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#A0F4FF">
+    android:layout_marginTop="5dp"
+    android:background="#A0F4FF"
+    android:id="@+id/cl_item_rv_country">
 
     <ImageView
         android:id="@+id/iv_item_flag"
-        android:layout_width="70dp" android:layout_height="80dp"
+        android:layout_width="102dp"
+        android:layout_height="103dp"
         android:layout_marginStart="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/italy_flag" />
+        tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/iv_item_label"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="@string/italian_label"
+        android:layout_marginHorizontal="16dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/iv_item_flag"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/iv_item_flag"
-        app:layout_constraintTop_toTopOf="@+id/iv_item_flag" />
+        app:layout_constraintTop_toTopOf="@+id/iv_item_flag"
+        tools:text="China" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
