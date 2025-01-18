@@ -18,6 +18,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
 
     private ArrayList<Country> countries;
     private CountryAdapter countryAdapter;
+    RecyclerView recyclerView;
     public final static int REQUEST_COUNTRY = 4054;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,11 @@ public class RecyclerViewActivity extends AppCompatActivity {
         countries = new ArrayList<>();
 
         countries.add(new Country("Mexico",R.drawable.mexico_flag_small));
+        countries.add(new Country("France",R.drawable.france_flag_small));
+        countries.add(new Country("Australia",R.drawable.australia_flag_small));
+        countries.add(new Country("Tunisia",R.drawable.tunisia_flag_small));
+        countries.add(new Country("India",R.drawable.india_flag_small));
+        countries.add(new Country("China",R.drawable.china_flag_small));countries.add(new Country("Mexico",R.drawable.mexico_flag_small));
         countries.add(new Country("France",R.drawable.france_flag_small));
         countries.add(new Country("Australia",R.drawable.australia_flag_small));
         countries.add(new Country("Tunisia",R.drawable.tunisia_flag_small));
@@ -39,7 +45,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
         countries.sort(Country::compareTo);
 
 
-        RecyclerView recyclerView = findViewById(R.id.rv_country);
+        recyclerView = findViewById(R.id.rv_country);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         countryAdapter = new CountryAdapter(countries);
         countryAdapter.setMyCallback(o -> Toast.makeText(this, ((Country)o).getCountryName(), Toast.LENGTH_SHORT).show());
@@ -73,6 +79,7 @@ public class RecyclerViewActivity extends AppCompatActivity {
                 Log.d("test", ""+country.getUrlPicture()+" "+country.getCountryName());
                 countries.add(country);
                 countryAdapter.notifyItemInserted(countryAdapter.getItemCount());
+                recyclerView.scrollToPosition(countries.size() - 1);
             }
         }
     }

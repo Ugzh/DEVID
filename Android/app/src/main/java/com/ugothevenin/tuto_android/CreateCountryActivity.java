@@ -37,33 +37,16 @@ public class CreateCountryActivity extends AppCompatActivity {
                         Picasso.get().load(R.drawable.blank).into(civ);
                 }
             }
-
         });
+
         btnValidate.setOnClickListener(e->{
             String url = etUrl.getText().toString().trim();
             String countryName = etCountryName.getText().toString().trim();
 
-            if(!url.isEmpty() && !countryName.isEmpty()){
+            if(!url.isEmpty() && !countryName.isEmpty())
                 setResult(RESULT_OK, new Intent().putExtra(KEY_COUNTRY_INFORMATIONS, new Country(countryName, url)));
-            }
             finish();
+
         });
     }
-
-//    @Override
-//    public boolean dispatchKeyEvent(KeyEvent KEvent)
-//    {
-//        //int keyaction = KEvent.getAction();
-//        if(KEvent.getAction() == KeyEvent.ACTION_DOWN)
-//        {
-//            int keycode = KEvent.getKeyCode();
-//            int keyunicode = KEvent.getUnicodeChar(KEvent.getMetaState() );
-//            char character = (char) keyunicode;
-//
-//            System.out.println("DEBUG MESSAGE KEY=" + character + " KEYCODE=" +  keycode);
-//        }
-//
-//
-//        return super.dispatchKeyEvent(KEvent);
-//    }
 }

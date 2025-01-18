@@ -53,7 +53,6 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryHolder>{
         else
             Picasso.get().load(country.getResId()).into(holder.ivFlag);
 
-
         //holder.clItem.setOnClickListener(e -> {
             //rv.printToast(country.getCountryName());
             //Toast.makeText(iSendContext.getContext(), country.getCountryName(),Toast.LENGTH_SHORT).show();
