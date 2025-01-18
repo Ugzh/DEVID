@@ -1,6 +1,7 @@
 package com.ugothevenin.tuto_android;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,6 +14,8 @@ public class CountryHolder extends RecyclerView.ViewHolder {
     public ImageView ivFlag;
     public TextView tvCountryName;
     public ConstraintLayout clItem;
+
+    public Button btnAddCountry;
 
     public CountryHolder(@NonNull View itemView) {
         super(itemView);

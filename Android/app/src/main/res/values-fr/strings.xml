@@ -14,6 +14,10 @@
     <string name="btn_return">Retour</string>
     <string name="second_main_title">2e activity</string>
     <string name="italian_label">Italie</string>
+    <string name="add_country">Ajouter pays</string>
+    <string name="new_country">Nouveau Pays</string>
+    <string name="country_name">Nom du pays</string>
+
 
 
 </resources>

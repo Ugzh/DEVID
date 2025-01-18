@@ -15,4 +15,9 @@
     <string name="second_main_title">2e activity</string>
     <string name="italian_label">Italy</string>
 
+    <string name="add_country">Add country</string>
+    <string name="country_name">Country name</string>
+    <string name="new_country">New country</string>
+    <string name="image_url" translatable="false">Image URL</string>
+
 </resources>
